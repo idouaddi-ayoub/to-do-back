@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum State {
+  done
+  pending
+  canceled
+  inProgress
+}
+
+enum priority {
+  low
+  medium
+  high
+}
+
+enum RequiredEffort {
+  easy
+  moderate
+  hard
+}
+
+enum DUE_DATE {
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+  sunday
+}
+
+model Category {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  color      String
+  notes      Note[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Note {
+  id          Int            @id @default(autoincrement())
+  name        String
+  description String
+  category_id Int
+  state       State
+  priority    priority
+  due_date    String
+  effort      RequiredEffort
+  category    Category       @relation(fields: [category_id], references: [id])
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @default(now())
+}
